@@ -11,7 +11,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { ToastProvider } from '@/components/toast';
 import { useAuth } from '@/hooks/use-auth';
 import { persistor, store } from '@/store';
-import { global } from '@/styles';
+import { globals } from '@/styles';
 
 registerGlobals();
 
@@ -52,7 +52,7 @@ function MainLayout() {
 
 function LoadingView() {
   return (
-    <View style={[global.container, global.justifyCenter, global.alignCenter]}>
+    <View style={[globals.container, globals.justifyCenter, globals.alignCenter]}>
       <ActivityIndicator size="large" color="#000" />
     </View>
   );

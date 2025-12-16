@@ -21,6 +21,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { toast } from '@/components/toast';
 import { useAuth } from '@/hooks/use-auth';
 import { useLiveKit } from '@/hooks/use-livekit';
+import { globals } from '@/styles';
 import { livekitApi } from '@/utils/api';
 import { AVATAR_URL, LIVEKIT_URL } from '@/utils/constants';
 import { ChatMessage } from '@/utils/types';
@@ -30,9 +31,9 @@ const TEST_ROOM = 'test-room';
 export default function VideoScreen() {
   const { user } = useAuth();
 
-  const messagesListRef = useRef<FlatList<ChatMessage>>(null);
   const [token, setToken] = useState('');
   const [chatMessage, setChatMessage] = useState('');
+  const messagesListRef = useRef<FlatList<ChatMessage>>(null);
   const keyboardOffset = useRef(new Animated.Value(0)).current;
 
   const username = user?.username || `user-${Math.floor(Math.random() * 100000)}`;
@@ -178,9 +179,9 @@ export default function VideoScreen() {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={styles.container}>
+      <View style={globals.container}>
         {/* Full Screen Local Video */}
-        {localTrackRef && Platform.OS !== 'web' && <VideoTrack style={styles.container} trackRef={localTrackRef} />}
+        {localTrackRef && Platform.OS !== 'web' && <VideoTrack style={globals.container} trackRef={localTrackRef} />}
 
         <SafeAreaView style={StyleSheet.absoluteFillObject} edges={['top']}>
           {/* Overlay Controls */}
@@ -274,10 +275,6 @@ export default function VideoScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#000',
-  },
   controlsContainer: {
     position: 'absolute',
     top: 60,

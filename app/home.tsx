@@ -14,6 +14,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Switch } from '@/components/switch';
 import { toast } from '@/components/toast';
 import { useAuth } from '@/hooks/use-auth';
+import { globals } from '@/styles';
 import { userApi } from '@/utils/api';
 
 export default function HomeScreen() {
@@ -64,7 +65,7 @@ export default function HomeScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={globals.container}>
       <View style={styles.content}>
         <View style={styles.topSection}>
           <Text style={styles.title}>Status</Text>
@@ -112,9 +113,6 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   content: {
     flex: 1,
     justifyContent: 'space-between',
