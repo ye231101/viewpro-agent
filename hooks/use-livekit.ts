@@ -30,6 +30,8 @@ interface UseLiveKitReturn {
   toggleCamera: () => Promise<void>;
   isFrontCamera: boolean;
   switchCamera: () => Promise<void>;
+  isScreenShareEnabled: boolean;
+  toggleScreenShare: () => Promise<void>;
   messages: ChatMessage[];
   sendMessage: (text: string) => Promise<boolean>;
   cleanup: () => Promise<void>;
@@ -43,6 +45,7 @@ export function useLiveKit({ url, token, username, avatar, enabled }: UseLiveKit
   const [isMicrophoneEnabled, setIsMicrophoneEnabled] = useState(true);
   const [isCameraEnabled, setIsCameraEnabled] = useState(true);
   const [isFrontCamera, setIsFrontCamera] = useState(true);
+  const [isScreenShareEnabled, setIsScreenShareEnabled] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   // Track version to force re-render when tracks are published
   const [, setTrackVersion] = useState(0);
@@ -199,6 +202,13 @@ export function useLiveKit({ url, token, username, avatar, enabled }: UseLiveKit
     }
   }, [isFrontCamera]);
 
+  const toggleScreenShare = useCallback(async () => {
+    if (!roomRef.current?.localParticipant) return;
+    const newEnabled = !isScreenShareEnabled;
+    await roomRef.current.localParticipant.setScreenShareEnabled(newEnabled);
+    setIsScreenShareEnabled(newEnabled);
+  }, [isScreenShareEnabled]);
+
   useEffect(() => {
     if (enabled && url && token) {
       connect();
@@ -220,6 +230,8 @@ export function useLiveKit({ url, token, username, avatar, enabled }: UseLiveKit
     toggleCamera,
     isFrontCamera,
     switchCamera,
+    isScreenShareEnabled,
+    toggleScreenShare,
     messages,
     sendMessage,
     cleanup,

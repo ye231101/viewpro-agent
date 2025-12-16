@@ -43,6 +43,8 @@ export default function VideoScreen() {
     isMicrophoneEnabled,
     toggleMicrophone,
     switchCamera,
+    isScreenShareEnabled,
+    toggleScreenShare,
     messages,
     sendMessage,
     cleanup,
@@ -126,8 +128,8 @@ export default function VideoScreen() {
     await switchCamera();
   };
 
-  const handleScreenShare = () => {
-    toast.info({ message: 'Screen share not implemented yet' });
+  const handleScreenShare = async () => {
+    await toggleScreenShare();
   };
 
   const handleAddUser = () => {
@@ -198,8 +200,11 @@ export default function VideoScreen() {
               <AntDesign name="retweet" size={24} color="white" />
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.controlButton} onPress={handleScreenShare}>
-              <AntDesign name="share-alt" size={24} color="white" />
+            <TouchableOpacity
+              style={[styles.controlButton, isScreenShareEnabled && styles.controlButtonActive]}
+              onPress={handleScreenShare}
+            >
+              <AntDesign name="laptop" size={24} color="white" />
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.controlButton} onPress={handleAddUser}>
