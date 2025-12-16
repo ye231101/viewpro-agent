@@ -78,9 +78,9 @@ const styles = StyleSheet.create({
 });
 
 /**
- * ToastContainer component to be rendered at the root level
+ * ToastProvider component to be rendered at the root level
  */
-export function ToastContainer() {
+export function ToastProvider() {
   return <Toast config={toastConfig} />;
 }
 

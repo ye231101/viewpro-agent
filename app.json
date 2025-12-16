@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "LIVE",
+    "name": "OTTO",
     "slug": "viewpro-agent",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -37,12 +37,15 @@
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO",
         "android.permission.MODIFY_AUDIO_SETTINGS",
-        "android.permission.FOREGROUND_SERVICE",
-        "android.permission.WAKE_LOCK",
         "android.permission.ACCESS_NETWORK_STATE",
         "android.permission.INTERNET",
+        "android.permission.BLUETOOTH",
+        "android.permission.POST_NOTIFICATIONS",
+        "android.permission.VIBRATE",
+        "android.permission.WAKE_LOCK",
         "android.permission.SYSTEM_ALERT_WINDOW",
-        "android.permission.BLUETOOTH"
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.RECEIVE_BOOT_COMPLETED"
       ]
     },
     "web": {

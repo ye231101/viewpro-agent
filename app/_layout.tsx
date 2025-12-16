@@ -2,17 +2,32 @@ import { registerGlobals } from '@livekit/react-native';
 import { router, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 import 'react-native-reanimated';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 
-import { ToastContainer } from '@/components/toast';
+import { ToastProvider } from '@/components/toast';
 import { useAuth } from '@/hooks/use-auth';
 import { persistor, store } from '@/store';
+import { styles } from '@/styles';
 
 registerGlobals();
+
+export default function RootLayout() {
+  return (
+    <Provider store={store}>
+      <PersistGate loading={<LoadingView />} persistor={persistor}>
+        <SafeAreaProvider>
+          <MainLayout />
+          <StatusBar style="auto" />
+          <ToastProvider />
+        </SafeAreaProvider>
+      </PersistGate>
+    </Provider>
+  );
+}
 
 function MainLayout() {
   const { isAuthenticated } = useAuth();
@@ -21,7 +36,7 @@ function MainLayout() {
     if (isAuthenticated) {
       router.replace('/home');
     } else {
-      router.replace('/');
+      router.replace('/login');
     }
   }, [isAuthenticated]);
 
@@ -35,32 +50,10 @@ function MainLayout() {
   );
 }
 
-export default function RootLayout() {
-  return (
-    <Provider store={store}>
-      <PersistGate loading={<LoadingView />} persistor={persistor}>
-        <SafeAreaProvider>
-          <MainLayout />
-          <ToastContainer />
-          <StatusBar style="auto" />
-        </SafeAreaProvider>
-      </PersistGate>
-    </Provider>
-  );
-}
-
 function LoadingView() {
   return (
-    <View style={styles.container}>
-      <ActivityIndicator size="large" />
+    <View style={[styles.container, styles.justifyCenter, styles.alignCenter]}>
+      <ActivityIndicator size="large" color="#000" />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
