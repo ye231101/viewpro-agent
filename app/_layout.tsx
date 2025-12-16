@@ -1,24 +1,66 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { Stack } from 'expo-router';
+import { registerGlobals } from '@livekit/react-native';
+import { router, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { useEffect } from 'react';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import 'react-native-reanimated';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
 
-import { useColorScheme } from '@/hooks/use-color-scheme';
+import { ToastContainer } from '@/components/toast';
+import { useAuth } from '@/hooks/use-auth';
+import { persistor, store } from '@/store';
 
-export const unstable_settings = {
-  anchor: '(tabs)',
-};
+registerGlobals();
 
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
+function MainLayout() {
+  const { isAuthenticated } = useAuth();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.replace('/home');
+    } else {
+      router.replace('/');
+    }
+  }, [isAuthenticated]);
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <Stack>
+      <Stack.Screen name="index" options={{ headerShown: false }} />
+      <Stack.Screen name="login" options={{ headerShown: false }} />
+      <Stack.Screen name="home" options={{ headerShown: false }} />
+      <Stack.Screen name="video" options={{ headerShown: false }} />
+    </Stack>
   );
 }
+
+export default function RootLayout() {
+  return (
+    <Provider store={store}>
+      <PersistGate loading={<LoadingView />} persistor={persistor}>
+        <SafeAreaProvider>
+          <MainLayout />
+          <ToastContainer />
+          <StatusBar style="auto" />
+        </SafeAreaProvider>
+      </PersistGate>
+    </Provider>
+  );
+}
+
+function LoadingView() {
+  return (
+    <View style={styles.container}>
+      <ActivityIndicator size="large" />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
