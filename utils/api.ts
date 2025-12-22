@@ -59,6 +59,7 @@ export const authApi = {
 export const userApi = {
   setAvailable: () => api.put('/user/available'),
   setUnavailable: () => api.put('/user/unavailable'),
+  updateFCMToken: (token: string) => api.put('/user/updateFCMToken', { fcmToken: token }),
 };
 
 export const livekitApi = {

@@ -1,7 +1,7 @@
 import { AntDesign } from '@expo/vector-icons';
 import { AudioSession, VideoTrack } from '@livekit/react-native';
 import { Image } from 'expo-image';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { Track } from 'livekit-client';
 import React, { useEffect, useRef, useState } from 'react';
 import {
@@ -26,9 +26,10 @@ import { livekitApi } from '@/utils/api';
 import { AVATAR_URL, LIVEKIT_URL } from '@/utils/constants';
 import { ChatMessage } from '@/utils/types';
 
-const TEST_ROOM = 'test-room';
+export default function VideoCallScreen() {
+  const params = useLocalSearchParams<{ roomName?: string }>();
+  const roomName = params.roomName || '';
 
-export default function VideoScreen() {
   const { user } = useAuth();
 
   const [token, setToken] = useState('');
@@ -107,7 +108,7 @@ export default function VideoScreen() {
 
   const fetchToken = async () => {
     try {
-      const response = await livekitApi.getToken(TEST_ROOM, username);
+      const response = await livekitApi.getToken(roomName, username);
       const tokenFromApi = response.data?.token || '';
       setToken(tokenFromApi);
     } catch (error) {
@@ -118,7 +119,7 @@ export default function VideoScreen() {
 
   const handleLeave = async () => {
     await cleanup();
-    router.back();
+    router.replace('/home');
   };
 
   const handleToggleMute = async () => {

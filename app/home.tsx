@@ -1,3 +1,12 @@
+import {
+  AuthorizationStatus,
+  getInitialNotification,
+  getMessaging,
+  getToken,
+  onMessage,
+  onNotificationOpenedApp,
+  requestPermission,
+} from '@react-native-firebase/messaging';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import {
@@ -16,6 +25,7 @@ import { toast } from '@/components/toast';
 import { useAuth } from '@/hooks/use-auth';
 import { globals } from '@/styles';
 import { userApi } from '@/utils/api';
+import { ringtone } from '@/utils/ringtone';
 
 export default function HomeScreen() {
   const { user, logout, updateUser, isLoading } = useAuth();
@@ -23,22 +33,118 @@ export default function HomeScreen() {
   const [isToggling, setIsToggling] = useState(false);
 
   useEffect(() => {
+    // Request Android permissions
+    const getPermission = async () => {
+      if (Platform.OS === 'android') {
+        try {
+          await PermissionsAndroid.requestMultiple([
+            PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+            PermissionsAndroid.PERMISSIONS.CAMERA,
+          ]);
+        } catch (error) {
+          console.error('Error requesting permissions:', error);
+        }
+      }
+    };
     getPermission();
   }, []);
 
-  // Request Android permissions
-  const getPermission = async () => {
-    if (Platform.OS === 'android') {
-      try {
-        await PermissionsAndroid.requestMultiple([
-          PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
-          PermissionsAndroid.PERMISSIONS.CAMERA,
-        ]);
-      } catch (error) {
-        console.error('Error requesting permissions:', error);
+  useEffect(() => {
+    const requestUserPermission = async () => {
+      const authStatus = await requestPermission(messaging);
+      const enabled = authStatus === AuthorizationStatus.AUTHORIZED || authStatus === AuthorizationStatus.PROVISIONAL;
+
+      if (enabled) {
+        const token = await getToken(messaging);
+        console.log('FCM Token:', token);
+        try {
+          await userApi.updateFCMToken(token);
+        } catch (error) {
+          console.error('Failed to update FCM token:', error);
+          toast.error({ message: 'Failed to update FCM token' });
+        }
       }
-    }
-  };
+    };
+    requestUserPermission();
+  }, []);
+
+  const messaging = getMessaging();
+
+  useEffect(() => {
+    // Listen for foreground messages
+    const unsubscribe = onMessage(messaging, (remoteMessage) => {
+      console.log('Foreground notification:', remoteMessage);
+      const { data } = remoteMessage;
+
+      // Handle data payload
+      if (data) {
+        console.log('Notification data:', data);
+        if (data.type === 'request_call') {
+          // Play ringtone
+          ringtone.play();
+
+          router.replace({
+            pathname: '/incoming-call',
+            params: {
+              callerName: String(data.callerName || 'Client'),
+              roomName: String(data.roomName || ''),
+            },
+          });
+        }
+      }
+    });
+
+    return unsubscribe;
+  }, []);
+
+  useEffect(() => {
+    // Handle FCM notification when app is opened from quit state
+    getInitialNotification(messaging).then((remoteMessage) => {
+      if (remoteMessage) {
+        console.log('FCM notification caused app to open:', remoteMessage);
+        const { data } = remoteMessage;
+
+        // Handle incoming call notification
+        if (data) {
+          console.log('Notification data:', data);
+          if (data.type === 'request_call') {
+            // Play ringtone
+            ringtone.play();
+
+            router.replace({
+              pathname: '/incoming-call',
+              params: {
+                callerName: String(data.callerName || 'Client'),
+                roomName: String(data.roomName || ''),
+              },
+            });
+          }
+        }
+      }
+    });
+
+    // Handle notification when app is in background and user taps it (FCM)
+    const unsubscribe = onNotificationOpenedApp(messaging, (remoteMessage) => {
+      console.log('FCM notification opened app:', remoteMessage);
+      const { data } = remoteMessage;
+
+      // Handle incoming call notification
+      if (data) {
+        console.log('Notification data:', data);
+        if (data.type === 'request_call') {
+          router.replace({
+            pathname: '/incoming-call',
+            params: {
+              callerName: String(data.callerName || 'Client'),
+              roomName: String(data.roomName || ''),
+            },
+          });
+        }
+      }
+    });
+
+    return unsubscribe;
+  }, []);
 
   const handleToggle = async (value: boolean) => {
     if (isToggling) return;
@@ -84,20 +190,6 @@ export default function HomeScreen() {
               />
             </View>
           </View>
-
-          <TouchableOpacity
-            style={{
-              width: '100%',
-              height: 50,
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: '#000',
-              borderRadius: 8,
-            }}
-            onPress={() => router.push('/video')}
-          >
-            <Text style={{ color: '#fff', fontSize: 16, fontWeight: '600' }}>TEST VIDEO CALL</Text>
-          </TouchableOpacity>
         </View>
 
         <TouchableOpacity
@@ -131,7 +223,6 @@ const styles = StyleSheet.create({
   },
   switchContainer: {
     padding: 20,
-    marginBottom: 24,
     backgroundColor: '#fff',
     borderRadius: 16,
   },

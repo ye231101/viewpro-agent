@@ -45,7 +45,8 @@ function MainLayout() {
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="login" options={{ headerShown: false }} />
       <Stack.Screen name="home" options={{ headerShown: false }} />
-      <Stack.Screen name="video" options={{ headerShown: false }} />
+      <Stack.Screen name="incoming-call" options={{ headerShown: false }} />
+      <Stack.Screen name="video-call" options={{ headerShown: false }} />
     </Stack>
   );
 }
