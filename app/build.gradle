@@ -2,10 +2,22 @@ plugins {
     alias(libs.plugins.android.application)
 }
 
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(new FileInputStream(localPropertiesFile))
+}
+
+def SERVER_URL = localProperties.getProperty("SERVER_URL", "http://10.0.2.2:8000")
+
 android {
     namespace 'com.viewpro.agent'
     compileSdk {
         version = release(36)
+    }
+
+    buildFeatures {
+        buildConfig true
     }
 
     defaultConfig {
@@ -16,17 +28,25 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField "String", "SERVER_URL", "\"${SERVER_URL}\""
     }
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
+    }
+    packagingOptions {
+        jniLibs {
+            useLegacyPackaging true
+        }
     }
 }
 
