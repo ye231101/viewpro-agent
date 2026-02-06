@@ -18,6 +18,11 @@ public class Utils {
 
     public static final int PERMISSION_REQUEST_CODE = 1;
 
+    public static final int NOTIFICATION_ID = 1001;
+    public static final String INCOMING_CALL_CHANNEL_ID = "INCOMING_CALL";
+    public static final String INCOMING_CALL_CHANNEL_NAME = "Incoming Call";
+    public static final String INCOMING_CALL_CHANNEL_DESCRIPTION = "Incoming Call Notification";
+
     public static ApiService apiService;
 
     private static SharedPreferences getSharedPreferences(Context context) {

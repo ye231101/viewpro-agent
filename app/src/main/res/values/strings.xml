@@ -6,9 +6,10 @@
     <string name="password">Password</string>
     <string name="online">Online</string>
     <string name="offline">Offline</string>
+    <string name="client">Client</string>
+    <string name="slide_to_answer">Slide to answer</string>
     <string name="success_login">Logged in successfully.</string>
     <string name="success_logout">Logged out successfully.</string>
     <string name="error_invalid_credentials">Invalid username or password.</string>
     <string name="internal_server_error">Internal Server Error</string>
-    <string name="network_error">Network is offline</string>
 </resources>

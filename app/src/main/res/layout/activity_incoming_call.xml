@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/incoming_call"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="24dp"
+    tools:context=".IncomingCallActivity">
+
+    <TextView
+        android:id="@+id/caller_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|center_horizontal"
+        android:layout_marginTop="160dp"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:shadowColor="#80000000"
+        android:shadowRadius="4"
+        android:singleLine="true"
+        android:text="@string/client"
+        android:textColor="@color/black"
+        android:textSize="48sp"
+        android:textStyle="bold" />
+
+    <SeekBar
+        android:id="@+id/slide_to_answer"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="80dp"
+        android:background="@drawable/bg_seekbar"
+        android:contentDescription="@string/slide_to_answer"
+        android:elevation="8dp"
+        android:max="100"
+        android:progress="0"
+        android:progressDrawable="@android:color/transparent"
+        android:splitTrack="false"
+        android:thumb="@drawable/seekbar_thumb"
+        android:thumbOffset="12dp" />
+
+</FrameLayout>
