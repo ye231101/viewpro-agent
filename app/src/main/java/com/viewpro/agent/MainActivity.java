@@ -37,7 +37,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
-
     private static final String TAG = "MainActivity";
 
     private static String username;
@@ -65,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
         statusSwitch = findViewById(R.id.status_switch);
         statusLabel = findViewById(R.id.status_label);
-        logoutButton = findViewById(R.id.logout);
+        logoutButton = findViewById(R.id.logout_button);
         logoutProgress = findViewById(R.id.logout_progress);
 
         username = getUsername(this);
