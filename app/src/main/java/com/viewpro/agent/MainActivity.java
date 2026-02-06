@@ -74,7 +74,8 @@ public class MainActivity extends AppCompatActivity {
         statusSwitch.setChecked(isOnline);
         statusLabel.setText(isOnline ? R.string.online : R.string.offline);
 
-        statusSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+        statusSwitch.setOnClickListener((v) -> {
+            boolean isChecked = statusSwitch.isChecked();
             statusLabel.setText(isChecked ? R.string.online : R.string.offline);
             updateStatus(isChecked ? "online" : "offline");
         });
