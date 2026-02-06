@@ -13,7 +13,7 @@ public interface ApiService {
 
     @FormUrlEncoded
     @POST("auth/logout")
-    Call<Response> logout(@Field("username") String username);
+    Call<Void> logout(@Field("username") String username);
 
     @FormUrlEncoded
     @PUT("user/status")

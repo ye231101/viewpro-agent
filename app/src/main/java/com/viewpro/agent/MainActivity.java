@@ -29,7 +29,6 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.viewpro.agent.api.ApiService;
 import com.viewpro.agent.utils.FCMTokenManager;
 
 import retrofit2.Call;
@@ -178,9 +177,9 @@ public class MainActivity extends AppCompatActivity {
 
         getApiService().logout(username).enqueue(new Callback<>() {
             @Override
-            public void onResponse(@NonNull Call<ApiService.Response> call, @NonNull Response<ApiService.Response> response) {
+            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
                 showLoading(false);
-                if (response.isSuccessful() && response.body() != null) {
+                if (response.isSuccessful()) {
                     Toast.makeText(MainActivity.this, getString(R.string.success_logout), Toast.LENGTH_SHORT).show();
 
                     setUsername(MainActivity.this, null);
@@ -197,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(@NonNull Call<ApiService.Response> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
                 showLoading(false);
                 Log.e(TAG, "Failed to logout: " + t.getMessage());
                 Toast.makeText(MainActivity.this, "Failed to logout: " + t.getMessage(), Toast.LENGTH_SHORT).show();
