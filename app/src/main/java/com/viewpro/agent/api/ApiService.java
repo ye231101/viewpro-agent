@@ -4,11 +4,20 @@ import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 
 public interface ApiService {
     @FormUrlEncoded
     @POST("auth/login")
     Call<Response> login(@Field("username") String username, @Field("password") String password);
+
+    @FormUrlEncoded
+    @POST("auth/logout")
+    Call<Response> logout(@Field("username") String username);
+
+    @FormUrlEncoded
+    @PUT("user/status")
+    Call<Response> updateStatus(@Field("username") String username, @Field("status") String status);
 
     class Response {
         private int code;
