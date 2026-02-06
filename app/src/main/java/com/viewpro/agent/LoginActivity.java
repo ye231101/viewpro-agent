@@ -37,7 +37,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
-
     private static final String TAG = "LoginActivity";
 
     private TextInputLayout usernameLayout;
@@ -70,8 +69,8 @@ public class LoginActivity extends AppCompatActivity {
         usernameEditText = findViewById(R.id.username);
         passwordLayout = findViewById(R.id.password_layout);
         passwordEditText = findViewById(R.id.password);
-        loginButton = findViewById(R.id.login);
-        loginProgress = findViewById(R.id.loading);
+        loginButton = findViewById(R.id.login_button);
+        loginProgress = findViewById(R.id.login_progress);
 
         loginButton.setOnClickListener(v -> login());
 
@@ -112,7 +111,7 @@ public class LoginActivity extends AppCompatActivity {
 
         boolean hasError = false;
         if (username.isEmpty()) {
-            usernameLayout.setError("The Username is required");
+            usernameLayout.setError("The username is required");
             hasError = true;
         } else {
             usernameLayout.setError(null);
