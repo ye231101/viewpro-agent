@@ -16,6 +16,8 @@ public class Utils {
     public static final String KEY_STATUS = "status";
     public static final String KEY_AVATAR = "avatar";
 
+    public static final int PERMISSION_REQUEST_CODE = 1;
+
     public static ApiService apiService;
 
     private static SharedPreferences getSharedPreferences(Context context) {

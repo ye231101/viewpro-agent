@@ -1,5 +1,6 @@
 package com.viewpro.agent;
 
+import static com.viewpro.agent.utils.Utils.PERMISSION_REQUEST_CODE;
 import static com.viewpro.agent.utils.Utils.getApiService;
 import static com.viewpro.agent.utils.Utils.getStatus;
 import static com.viewpro.agent.utils.Utils.getUsername;
@@ -7,7 +8,10 @@ import static com.viewpro.agent.utils.Utils.setAvatar;
 import static com.viewpro.agent.utils.Utils.setStatus;
 import static com.viewpro.agent.utils.Utils.setUsername;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,6 +23,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -53,6 +59,10 @@ public class MainActivity extends AppCompatActivity {
 
         updateFCMToken();
 
+        if (!checkPermissions()) {
+            requestPermissions();
+        }
+
         statusSwitch = findViewById(R.id.status_switch);
         statusLabel = findViewById(R.id.status_label);
         logoutButton = findViewById(R.id.logout);
@@ -71,6 +81,62 @@ public class MainActivity extends AppCompatActivity {
         });
 
         logoutButton.setOnClickListener(v -> logout());
+    }
+
+    private boolean checkPermissions() {
+        boolean hasBasicPermissions = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            return hasBasicPermissions && ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED;
+        }
+
+        return hasBasicPermissions;
+    }
+
+    private void requestPermissions() {
+        String[] permissionsList;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            permissionsList = new String[]{
+                    Manifest.permission.CAMERA,
+                    Manifest.permission.RECORD_AUDIO,
+                    Manifest.permission.BLUETOOTH_CONNECT,
+                    Manifest.permission.POST_NOTIFICATIONS
+            };
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            permissionsList = new String[]{
+                    Manifest.permission.CAMERA,
+                    Manifest.permission.RECORD_AUDIO,
+                    Manifest.permission.BLUETOOTH_CONNECT
+            };
+        } else {
+            permissionsList = new String[]{
+                    Manifest.permission.CAMERA,
+                    Manifest.permission.RECORD_AUDIO
+            };
+        }
+        ActivityCompat.requestPermissions(this, permissionsList, PERMISSION_REQUEST_CODE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            boolean allPermissionsGranted = true;
+            for (int result : grantResults) {
+                if (result != PackageManager.PERMISSION_GRANTED) {
+                    allPermissionsGranted = false;
+                    break;
+                }
+            }
+            if (!allPermissionsGranted) {
+                String message = "The app needs camera and microphone permissions for video calls";
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    message += ", and notification permission for alerts";
+                }
+                Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     private void updateStatus(String status) {
