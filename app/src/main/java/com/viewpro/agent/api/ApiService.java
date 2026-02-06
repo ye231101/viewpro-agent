@@ -17,7 +17,11 @@ public interface ApiService {
 
     @FormUrlEncoded
     @PUT("user/status")
-    Call<Response> updateStatus(@Field("username") String username, @Field("status") String status);
+    Call<Void> updateStatus(@Field("username") String username, @Field("status") String status);
+
+    @FormUrlEncoded
+    @PUT("user/fcm-token")
+    Call<Void> updateFCMToken(@Field("username") String username, @Field("fcmToken") String fcmToken);
 
     class Response {
         private int code;

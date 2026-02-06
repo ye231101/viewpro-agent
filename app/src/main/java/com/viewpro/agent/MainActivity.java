@@ -24,6 +24,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.viewpro.agent.api.ApiService;
+import com.viewpro.agent.utils.FCMTokenManager;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -50,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+        updateFCMToken();
+
         statusSwitch = findViewById(R.id.status_switch);
         statusLabel = findViewById(R.id.status_label);
         logoutButton = findViewById(R.id.logout);
@@ -73,8 +76,8 @@ public class MainActivity extends AppCompatActivity {
     private void updateStatus(String status) {
         getApiService().updateStatus(username, status).enqueue(new Callback<>() {
             @Override
-            public void onResponse(@NonNull Call<ApiService.Response> call, @NonNull Response<ApiService.Response> response) {
-                if (response.isSuccessful() && response.body() != null) {
+            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                if (response.isSuccessful()) {
                     setStatus(MainActivity.this, status);
                 } else {
                     Toast.makeText(MainActivity.this, getString(R.string.internal_server_error), Toast.LENGTH_SHORT).show();
@@ -82,11 +85,26 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(@NonNull Call<ApiService.Response> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
                 Log.e(TAG, "Failed to update status: " + t.getMessage());
                 Toast.makeText(MainActivity.this, "Failed to update status: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void updateFCMToken() {
+        FCMTokenManager fcmTokenManager = FCMTokenManager.getInstance();
+        fcmTokenManager.getFCMToken(token -> fcmTokenManager.updateFCMToken(username, token, new FCMTokenManager.TokenUpdateCallback() {
+            @Override
+            public void onSuccess() {
+                Log.d(TAG, "FCM token updated successfully");
+            }
+
+            @Override
+            public void onError(String error) {
+                Log.e(TAG, "Failed to update FCM token: " + error);
+            }
+        }));
     }
 
     private void logout() {
