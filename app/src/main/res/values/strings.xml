@@ -8,6 +8,15 @@
     <string name="offline">Offline</string>
     <string name="client">Client</string>
     <string name="slide_to_answer">Slide to answer</string>
+    <string name="button_send">Send</string>
+    <string name="button_disconnect">Disconnect</string>
+    <string name="button_audio">Audio</string>
+    <string name="button_flip_camera">Flip Camera</string>
+    <string name="button_screen_share">Screen Share</string>
+    <string name="button_stop_screen_share">Stop Screen Share</string>
+    <string name="button_invite_agent">Invite Agent</string>
+    <string name="button_invite">Invite</string>
+    <string name="send_message">Send message&#8230;</string>
     <string name="success_login">Logged in successfully.</string>
     <string name="success_logout">Logged out successfully.</string>
     <string name="error_invalid_credentials">Invalid username or password.</string>

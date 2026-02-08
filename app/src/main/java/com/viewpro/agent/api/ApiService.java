@@ -3,8 +3,10 @@ package com.viewpro.agent.api;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Query;
 
 public interface ApiService {
     @FormUrlEncoded
@@ -22,6 +24,9 @@ public interface ApiService {
     @FormUrlEncoded
     @PUT("user/fcm-token")
     Call<Void> updateFCMToken(@Field("username") String username, @Field("fcmToken") String fcmToken);
+
+    @GET("livekit/token")
+    Call<Response> getLivekitToken(@Query("room") String room, @Query("username") String username);
 
     class Response {
         private int code;

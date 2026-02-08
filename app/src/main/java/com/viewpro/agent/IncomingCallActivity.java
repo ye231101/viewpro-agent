@@ -4,6 +4,7 @@ import static com.viewpro.agent.utils.Utils.NOTIFICATION_ID;
 
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -36,6 +37,7 @@ public class IncomingCallActivity extends AppCompatActivity {
         setTurnScreenOn(true);
 
         String callerName = getIntent().getStringExtra("callerName");
+        String roomName = getIntent().getStringExtra("roomName");
 
         TextView nameView = findViewById(R.id.caller_name);
         nameView.setText(callerName != null ? callerName : getString(R.string.client));
@@ -56,6 +58,11 @@ public class IncomingCallActivity extends AppCompatActivity {
             public void onStopTrackingTouch(SeekBar seekBar) {
                 if (seekBar.getProgress() > 50) {
                     RingtoneService.stopRinging();
+                    Intent intent = new Intent(IncomingCallActivity.this, VideoCallActivity.class)
+                            .putExtra("roomName", roomName)
+                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    finish();
                 }
                 seekBar.setProgress(0);
             }

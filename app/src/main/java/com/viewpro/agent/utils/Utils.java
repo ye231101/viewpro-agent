@@ -12,6 +12,7 @@ public class Utils {
     public static final String BASE_URL = SERVER_URL + "/api/";
 
     public static final String PREF_NAME = "ViewProPrefs";
+    public static final String KEY_NAME = "name";
     public static final String KEY_USERNAME = "username";
     public static final String KEY_STATUS = "status";
     public static final String KEY_AVATAR = "avatar";
@@ -27,6 +28,16 @@ public class Utils {
 
     private static SharedPreferences getSharedPreferences(Context context) {
         return context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+    }
+
+    public static String getName(Context context) {
+        return getSharedPreferences(context).getString(KEY_NAME, "");
+    }
+
+    public static void setName(Context context, String name) {
+        SharedPreferences.Editor editor = getSharedPreferences(context).edit();
+        editor.putString(KEY_USERNAME, name);
+        editor.apply();
     }
 
     public static String getUsername(Context context) {
