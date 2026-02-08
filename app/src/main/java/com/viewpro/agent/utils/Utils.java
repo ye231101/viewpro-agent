@@ -11,6 +11,8 @@ public class Utils {
     public static final String SERVER_URL = BuildConfig.SERVER_URL;
     public static final String BASE_URL = SERVER_URL + "/api/";
 
+    public static final String LIVEKIT_URL = BuildConfig.LIVEKIT_URL;
+
     public static final String PREF_NAME = "ViewProPrefs";
     public static final String KEY_NAME = "name";
     public static final String KEY_USERNAME = "username";
